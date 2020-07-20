@@ -19,21 +19,10 @@ filter([1,2,3,4,6], function (elem) {
     return elem % 2;
 }); // [1,3]
 --******************************************
-от себя: сделал чуть более гибко - одна универсальная функция, перебирает массив
-на вход принимает массив и функцию-логику;
-2 функции с логикой (*2 и %2)
+от себя:  для map(x2) и filter - одна универсальная функция, перебирает массив на вход принимает массив и функцию-логику;
 
 */
-let arr = [9,8,7,6,5,4,3,2,1];
-
-function x2 (elem){
-    return elem * 2;
-}
-
-function filter (elem){
-    return elem % 2;
-}
-
+// перебор массива для map(x2) и filter
 function universal (arr, fn) {
     let rezultArr = [];
     for (let index = 0; index < arr.length; index++) {
@@ -42,14 +31,87 @@ function universal (arr, fn) {
     return rezultArr;
 }
 
-// 1 вызов мар/filter
+// 1
+function x2 (elem){
+    return elem * 2;
+}
+// 2 
+function filter (elem){
+    return elem % 2;
+}
+
+// 3 дальше (в some/every/reduce) дублирую код с перебором массива
+function some (arr, fn){
+
+    if (!arr.length) return false;
+    
+    let isOk = false;
+
+    for (let index = 0; index < arr.length; index++) {
+        if(fn(arr[index])) isOk = true;
+    }
+
+    return isOk;
+}
+
+function every (arr, fn){
+
+    if (!arr.length) return false;
+    
+    let isOk = true;
+
+    for (let index = 0; index < arr.length; index++) {
+        if(!fn(arr[index])) {
+            isOk = false;
+            break;
+        }
+    }
+
+    return isOk;
+}
+
+function reduce(arr, fn){
+
+    if(!arr.length) return null;
+
+    let rez = arr[0];
+
+    for (let i = 1; i < arr.length; i++) {
+        rez = fn(rez,arr[i]);
+    }
+
+    return rez;
+}
+
+//------------------------------------------------
+let arr = [9,8,7,6,5,4,3,2,1];
+let arrChetniy  = [8,6,4,2]; 
+let arrNeChetniy  = [9,7,5,3,1]; 
+//------------------------------------------------
 
 let arr_x2 = universal (arr,x2); //имя arr_x2 читабельней чем arrX2 )
 
+console.log('arr_x2 = ' + arr_x2.toString());
+//------------------------------------------------
 let arrFiltered = universal (arr,filter);     
 
-// 2 смотрим
-
-console.log('arr_x2 = ' + arr_x2.toString());
-
 console.log('arrFiltered = ' + arrFiltered.toString());
+
+//------------------------------------------------
+
+let rezSome= some (arrNeChetniy, function(elem){
+    return (elem % 2);
+})
+console.log('rez some() = ' + rezSome);
+
+//------------------------------------------------
+
+let rezEvery= every (arrChetniy, function(elem){
+    return (elem % 2);
+})
+console.log('rez every() = ' + rezEvery);
+//------------------------------------------------
+let rezReduce= reduce (arrChetniy, function(numberA, numberB){
+    return (numberA + numberB);
+})
+console.log('rez reduce() = ' + rezReduce);
