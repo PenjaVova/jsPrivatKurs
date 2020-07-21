@@ -70,19 +70,27 @@ function every (arr, fn){
     return isOk;
 }
 
-function reduce(arr, fn){
+function reduce(arr, fn, initVal){
 
     if(!arr.length) return null;
 
-    let rez = arr[0];
+    let rez;
+    let startIndex;
+//проверка на наличие 3-го параметра
+    if(initVal !== undefined) {
+        startIndex = 0;
+        rez = initVal;
+    } else {
+        startIndex = 1;
+        rez = arr[0];
+    }
 
-    for (let i = 1; i < arr.length; i++) {
+    for (let i = startIndex; i < arr.length; i++) {
         rez = fn(rez,arr[i]);
     }
 
     return rez;
 }
-
 //------------------------------------------------
 let arr = [9,8,7,6,5,4,3,2,1];
 let arrChetniy  = [8,6,4,2]; 
@@ -92,7 +100,9 @@ let arrNeChetniy  = [9,7,5,3,1];
 let arr_x2 = universal (arr,x2); //имя arr_x2 читабельней чем arrX2 )
 
 console.log('arr_x2 = ' + arr_x2.toString());
+
 //------------------------------------------------
+
 let arrFiltered = universal (arr,filter);     
 
 console.log('arrFiltered = ' + arrFiltered.toString());
@@ -113,5 +123,5 @@ console.log('rez every() = ' + rezEvery);
 //------------------------------------------------
 let rezReduce= reduce (arrChetniy, function(numberA, numberB){
     return (numberA + numberB);
-})
+},'str')
 console.log('rez reduce() = ' + rezReduce);
